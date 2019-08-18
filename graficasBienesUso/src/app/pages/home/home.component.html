@@ -1,0 +1,57 @@
+<mat-tab-group>
+    <mat-tab label="Bienes">
+
+        <p class="titulo">Cantidad de bienes por Agencia y/o Tipos</p>
+
+        <mat-form-field>
+            <mat-label>Agencia</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let agencia of agencias" [value]="agencia.Id">
+                    {{agencia.Nombre}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Tipo Bien</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let tipo of tiposBienes" [value]="tipo.Id">
+                    {{tipo.Nombre}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput [matDatepicker]="desde" placeholder="Desde">
+            <mat-datepicker-toggle matSuffix [for]="desde"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #desde></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput [matDatepicker]="hasta" placeholder="Hasta">
+            <mat-datepicker-toggle matSuffix [for]="hasta"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #hasta></mat-datepicker>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="buscar()">Graficar</button>
+
+    </mat-tab>
+
+    <mat-tab label="Amortizaciones">
+
+        <p class="titulo">Amortizaciones</p>
+
+    </mat-tab>
+
+    <mat-tab label="Opciones">
+        <p class="titulo">Opciones</p>
+
+    </mat-tab>
+
+</mat-tab-group>
+
+<div style="width: 85%;margin:0 auto;">
+    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+        [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+    </canvas>
+</div>
