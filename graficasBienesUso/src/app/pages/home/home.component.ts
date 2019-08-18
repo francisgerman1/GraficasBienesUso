@@ -6,6 +6,7 @@ import { TipoBien } from 'src/app/models/TipoBien';
 import { Component, OnInit } from '@angular/core';
 import { Agencia } from 'src/app/models/agencia';
 import { Label } from 'ng2-charts';
+import Swal from 'sweetalert2';
 import 'hammerjs';
 
 export enum Select { AGENCIA, TIPO_BIEN }
@@ -138,7 +139,12 @@ export class HomeComponent implements OnInit {
 
   }
   mensaje(msg) {
-    alert(msg);
+    Swal.fire({
+      title: 'Mensaje',
+      text: msg,
+      type: 'warning',
+      confirmButtonText: 'Ok'
+    });
   }
   haydatosGrafica(): boolean {
     for (const elem of this.barChartData) {
