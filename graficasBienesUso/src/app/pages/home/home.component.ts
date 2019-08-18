@@ -104,11 +104,11 @@ export class HomeComponent implements OnInit {
           { data: [], label: 'Cantidad' }
         ];
 
-        grafica.forEach(element => {
+        for (const element of grafica) {
           this.barChartLabels.push(element.AgenciasNombre);
           dataset[0].data.push(element.DatosTipos.length === 0 ? 0 : Number(element.DatosTipos[0].BienesCostoOriginal));
           dataset[1].data.push(element.DatosTipos.length === 0 ? 0 : Number(element.DatosTipos[0].Cantidad));
-        });
+        }
 
         this.barChartData = dataset;
         this.mostrarGrafica = this.haydatosGrafica();
