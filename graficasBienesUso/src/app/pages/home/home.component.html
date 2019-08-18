@@ -1,12 +1,12 @@
 <mat-tab-group>
     <mat-tab label="Bienes">
 
-        <p class="titulo">Cantidad de bienes por Agencia y/o Tipos</p>
+        <p class="titulo">Altas de bienes por Agencia y Tipos</p>
 
         <mat-form-field>
             <mat-label>Agencia</mat-label>
-            <mat-select [(ngModel)]='agenciaId'>
-                <mat-option *ngFor="let agencia of agencias" [value]="agencia.Id">
+            <mat-select [(ngModel)]='agenciaId' (selectionChange)='selectChange($event, 0)'>
+                <mat-option *ngFor="let agencia of agenciasAux" [value]="agencia.Id">
                     {{agencia.Nombre}}
                 </mat-option>
             </mat-select>
@@ -14,8 +14,8 @@
 
         <mat-form-field>
             <mat-label>Tipo Bien</mat-label>
-            <mat-select [(ngModel)]='tipoBienId'>
-                <mat-option *ngFor="let tipo of tiposBienes" [value]="tipo.Id">
+            <mat-select [(ngModel)]='tipoBienId' (selectionChange)='selectChange($event, 1)'>
+                <mat-option *ngFor="let tipo of tiposBienesAux" [value]="tipo.Id">
                     {{tipo.Nombre}}
                 </mat-option>
             </mat-select>

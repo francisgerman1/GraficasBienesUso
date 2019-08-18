@@ -8,15 +8,30 @@ import { Agencia } from 'src/app/models/agencia';
 import { Label } from 'ng2-charts';
 import 'hammerjs';
 
+export enum Select { AGENCIA, TIPO_BIEN }
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
+
 export class HomeComponent implements OnInit {
 
   barChartOptions: ChartOptions = {
     responsive: true,
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }],
+      xAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
   };
   barChartLabels: Label[];
   barChartType: ChartType = 'bar';
@@ -26,7 +41,9 @@ export class HomeComponent implements OnInit {
 
   options: any[] = [];
   agencias: Agencia[];
+  agenciasAux: Agencia[];
   tiposBienes: TipoBien[];
+  tiposBienesAux: TipoBien[];
 
   desde: Date;
   hasta: Date;
@@ -36,25 +53,8 @@ export class HomeComponent implements OnInit {
   mostrarGrafica: boolean;
 
   constructor(private agenciasService: AgenciasService, private bienesService: BienesService, private graficasService: GraficasService) {
-
-    // Obtengo las agencias
-    this.agenciasService.getAgencias().then(agencias => {
-      this.agencias = agencias;
-      this.agencias.push({ Id: 0, Nombre: 'Todas', Codigo: '' });
-      this.agencias.sort(a => a.Id);
-    }).catch(error => {
-      console.error(error);
-    });
-
-    // Obtengo los tipos de bienes
-    this.bienesService.getTiposBienes().then(tipos => {
-      this.tiposBienes = tipos;
-      this.tiposBienes.push({ Id: 0, Nombre: 'Todos', VidaUtil: 0 });
-      this.tiposBienes.sort(t => t.Id);
-    }).catch(error => {
-      console.error(error);
-    });
-
+    this.llenarAgencias();
+    this.llenarTiposBienes();
     this.resetGrafica();
     this.opcionesGrafica();
   }
@@ -96,13 +96,13 @@ export class HomeComponent implements OnInit {
 
       this.resetGrafica();
 
+      const dataset: ChartDataSets[] = [
+        { data: [], label: 'Costo', hidden: false },
+        { data: [], label: 'Cantidad', hidden: true }
+      ];
+
       // Selecciono todas las agencias y un tipo de bien.
       if (this.agenciaId === 0 && this.tipoBienId !== 0) {
-
-        const dataset: ChartDataSets[] = [
-          { data: [], label: 'Costo' },
-          { data: [], label: 'Cantidad' }
-        ];
 
         for (const element of grafica) {
           this.barChartLabels.push(element.AgenciasNombre);
@@ -110,12 +110,25 @@ export class HomeComponent implements OnInit {
           dataset[1].data.push(element.DatosTipos.length === 0 ? 0 : Number(element.DatosTipos[0].Cantidad));
         }
 
-        this.barChartData = dataset;
-        this.mostrarGrafica = this.haydatosGrafica();
+      }
+      // Selecciono una agencia y todos los tipos de bienes
+      if (this.agenciaId !== 0 && this.tipoBienId === 0) {
 
-      } else {
+        if (grafica[0]) {
+          for (const datostipos of grafica[0].DatosTipos) {
+            this.barChartLabels.push(datostipos.TiposBienesNombre);
+            dataset[0].data.push(Number(datostipos.BienesCostoOriginal));
+            dataset[1].data.push(Number(datostipos.Cantidad));
+          }
+        }
 
       }
+      if (this.agenciaId !== 0 && this.tipoBienId !== 0) {
+        console.log('No tiene sentido mostrar un tipo de bien de una sola agencia');
+      }
+
+      this.barChartData = dataset;
+      this.mostrarGrafica = this.haydatosGrafica();
       this.waiting = false;
     }).catch(error => {
       console.error(error);
@@ -136,5 +149,43 @@ export class HomeComponent implements OnInit {
       }
     }
     return false;
+  }
+  llenarAgencias() {
+    // Obtengo las agencias
+    this.agenciasService.getAgencias().then(agencias => {
+      this.agencias = agencias;
+      this.agenciasAux = agencias;
+      this.agencias.push({ Id: 0, Nombre: 'Todas', Codigo: '' });
+      this.agencias.sort(a => a.Id);
+    }).catch(error => {
+      console.error(error);
+    });
+  }
+  llenarTiposBienes() {
+    // Obtengo los tipos de bienes
+    this.bienesService.getTiposBienes().then(tipos => {
+      this.tiposBienes = tipos;
+      this.tiposBienesAux = tipos;
+      this.tiposBienes.push({ Id: 0, Nombre: 'Todos', VidaUtil: 0 });
+      this.tiposBienes.sort(t => t.Id);
+    }).catch(error => {
+      console.error(error);
+    });
+  }
+  selectChange(event, tipo: Select) {
+    if (tipo === Select.AGENCIA) {
+      if (event.value === 0) {
+        this.tiposBienesAux = this.tiposBienes.filter(t => t.Id !== 0);
+      } else {
+        this.tiposBienesAux = this.tiposBienes;
+      }
+    }
+    if (tipo === Select.TIPO_BIEN) {
+      if (event.value === 0) {
+        this.agenciasAux = this.agencias.filter(a => a.Id !== 0);
+      } else {
+        this.agenciasAux = this.agencias;
+      }
+    }
   }
 }
