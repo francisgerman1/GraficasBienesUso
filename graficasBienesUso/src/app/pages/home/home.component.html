@@ -1,54 +1,59 @@
 <mat-tab-group>
     <mat-tab label="Bienes">
 
-        <p class="titulo">Altas de bienes por Agencia y Tipos</p>
+        <div class="input">
 
-        <mat-form-field>
-            <mat-label>Agencia</mat-label>
-            <mat-select [(ngModel)]='agenciaId' (selectionChange)='selectChange($event, 0)'>
-                <mat-option *ngFor="let agencia of agenciasAux" [value]="agencia.Id">
-                    {{agencia.Nombre}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+            <p class="titulo">Altas de bienes por Agencia y Tipos</p>
 
-        <mat-form-field>
-            <mat-label>Tipo Bien</mat-label>
-            <mat-select [(ngModel)]='tipoBienId' (selectionChange)='selectChange($event, 1)'>
-                <mat-option *ngFor="let tipo of tiposBienesAux" [value]="tipo.Id">
-                    {{tipo.Nombre}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+            <mat-form-field style="margin-right: 10px">
+                <mat-label>Agencia</mat-label>
+                <mat-select [(ngModel)]='agenciaId' (selectionChange)='selectChange($event, 0)'>
+                    <mat-option *ngFor="let agencia of agenciasAux" [value]="agencia.Id">
+                        {{agencia.Nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <mat-form-field>
-            <input matInput [matDatepicker]="from" placeholder="Desde" [(ngModel)]='desde'>
-            <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #from></mat-datepicker>
-        </mat-form-field>
+            <mat-form-field style="margin-right: 10px">
+                <mat-label>Tipo Bien</mat-label>
+                <mat-select [(ngModel)]='tipoBienId' (selectionChange)='selectChange($event, 1)'>
+                    <mat-option *ngFor="let tipo of tiposBienesAux" [value]="tipo.Id">
+                        {{tipo.Nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <mat-form-field>
-            <input matInput [matDatepicker]="to" placeholder="Hasta" [(ngModel)]='hasta'>
-            <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #to></mat-datepicker>
-        </mat-form-field>
+            <mat-form-field style="margin-right: 10px">
+                <input matInput [matDatepicker]="from" placeholder="Desde" [(ngModel)]='desde'>
+                <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
+                <mat-datepicker touchUi #from></mat-datepicker>
+            </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="buscar()">Graficar</button>
+            <mat-form-field style="margin-right: 10px">
+                <input matInput [matDatepicker]="to" placeholder="Hasta" [(ngModel)]='hasta'>
+                <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
+                <mat-datepicker touchUi #to></mat-datepicker>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="buscar()">Graficar</button>
+        </div>
 
     </mat-tab>
 
     <mat-tab label="Opciones">
-        <p class="titulo">Opciones</p>
+        <div class="input">
+            <p class="titulo">Opciones</p>
 
-        <mat-form-field>
-            <mat-label>Tipo de Gráfica</mat-label>
-            <mat-select [(ngModel)]='barChartType'>
-                <mat-option *ngFor="let opt of options" [value]="opt.value">
-                    <img [src]="opt.img" alt="Nofoto" width="30">
-                    {{opt.name}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>Tipo de Gráfica</mat-label>
+                <mat-select [(ngModel)]='barChartType'>
+                    <mat-option *ngFor="let opt of options" [value]="opt.value">
+                        <img [src]="opt.img" alt="Nofoto" width="30">
+                        {{opt.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
     </mat-tab>
 
