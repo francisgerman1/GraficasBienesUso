@@ -5,7 +5,7 @@
 
         <mat-form-field>
             <mat-label>Agencia</mat-label>
-            <mat-select>
+            <mat-select [(ngModel)]='agenciaId'>
                 <mat-option *ngFor="let agencia of agencias" [value]="agencia.Id">
                     {{agencia.Nombre}}
                 </mat-option>
@@ -14,7 +14,7 @@
 
         <mat-form-field>
             <mat-label>Tipo Bien</mat-label>
-            <mat-select>
+            <mat-select [(ngModel)]='tipoBienId'>
                 <mat-option *ngFor="let tipo of tiposBienes" [value]="tipo.Id">
                     {{tipo.Nombre}}
                 </mat-option>
@@ -22,36 +22,49 @@
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput [matDatepicker]="desde" placeholder="Desde">
-            <mat-datepicker-toggle matSuffix [for]="desde"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #desde></mat-datepicker>
+            <input matInput [matDatepicker]="from" placeholder="Desde" [(ngModel)]='desde'>
+            <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #from></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput [matDatepicker]="hasta" placeholder="Hasta">
-            <mat-datepicker-toggle matSuffix [for]="hasta"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #hasta></mat-datepicker>
+            <input matInput [matDatepicker]="to" placeholder="Hasta" [(ngModel)]='hasta'>
+            <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #to></mat-datepicker>
         </mat-form-field>
 
         <button mat-raised-button color="primary" (click)="buscar()">Graficar</button>
 
     </mat-tab>
 
-    <mat-tab label="Amortizaciones">
-
-        <p class="titulo">Amortizaciones</p>
-
-    </mat-tab>
-
     <mat-tab label="Opciones">
         <p class="titulo">Opciones</p>
+
+        <mat-form-field>
+            <mat-label>Tipo de Gráfica</mat-label>
+            <mat-select [(ngModel)]='barChartType'>
+                <mat-option *ngFor="let opt of options" [value]="opt.value">
+                    <img [src]="opt.img" alt="Nofoto" width="30">
+                    {{opt.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
     </mat-tab>
 
 </mat-tab-group>
 
-<div style="width: 85%;margin:0 auto;">
+<div style="width: 85%;margin:0 auto;" *ngIf="mostrarGrafica && !waiting">
     <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
         [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
     </canvas>
+</div>
+
+<mat-progress-bar mode="indeterminate" *ngIf="waiting"></mat-progress-bar>
+
+<div *ngIf="!mostrarGrafica && !waiting" style="text-align: center">
+    <div style="margin-top: 13%">
+        <img src="assets/img/grafico.png" class="imagenGrafica" width="100">
+        <p class="tituloGrafica"> No hay datos para graficar.</p>
+    </div>
 </div>
