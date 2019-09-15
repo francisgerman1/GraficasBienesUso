@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit {
     });
   }
   initGrafica() {
-    this.size = 50;
+    this.size = 70;
     this.agenciaId = 1; // Agencia central id=1
     this.tipoBienId = 0; // Todos los bienes id=0
     const lastYear = new Date().getFullYear() - 1;
