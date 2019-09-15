@@ -65,7 +65,7 @@
 
 </mat-tab-group>
 
-<div style="margin: 0 auto;" [style.height.px]="700 * (this.size/100)" [style.width.px]="1400 * (this.size/100)"
+<div [style.height.px]="700 * (this.size/100)" [style.width.px]="1400 * (this.size/100)"
     *ngIf="mostrarGrafica && !waiting">
     <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
         [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType" [style.height.%]="100"
