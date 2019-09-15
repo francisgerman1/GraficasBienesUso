@@ -8,6 +8,7 @@ import { Agencia } from 'src/app/models/agencia';
 import { Label } from 'ng2-charts';
 import Swal from 'sweetalert2';
 import 'hammerjs';
+import { MatSliderChange } from '@angular/material/slider';
 
 export enum Select { AGENCIA, TIPO_BIEN }
 
@@ -21,6 +22,7 @@ export class HomeComponent implements OnInit {
 
   barChartOptions: ChartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       yAxes: [{
         ticks: {
@@ -52,6 +54,8 @@ export class HomeComponent implements OnInit {
   tipoBienId: number;
   waiting: boolean;
   mostrarGrafica: boolean;
+  size: number;
+  datosGrafica: any;
 
   constructor(private agenciasService: AgenciasService, private bienesService: BienesService, private graficasService: GraficasService) {
     this.llenarAgencias().then(() => {
@@ -63,6 +67,7 @@ export class HomeComponent implements OnInit {
     });
   }
   initGrafica() {
+    this.size = 50;
     this.agenciaId = 1; // Agencia central id=1
     this.tipoBienId = 0; // Todos los bienes id=0
     const lastYear = new Date().getFullYear() - 1;
@@ -106,7 +111,17 @@ export class HomeComponent implements OnInit {
     this.waiting = true;
 
     this.graficasService.getBienesPorAgencia(this.agenciaId, this.tipoBienId, this.desde, this.hasta).then(grafica => {
+      this.datosGrafica = grafica;
+      this.refresh();
+    }).catch(error => {
+      console.error(error);
+      this.waiting = false;
+    });
 
+
+  }
+  refresh() {
+    if (this.datosGrafica) {
       this.resetGrafica();
 
       const dataset: ChartDataSets[] = [
@@ -117,7 +132,7 @@ export class HomeComponent implements OnInit {
       // Selecciono todas las agencias y un tipo de bien.
       if (this.agenciaId === 0 && this.tipoBienId !== 0) {
 
-        for (const element of grafica) {
+        for (const element of this.datosGrafica) {
           this.barChartLabels.push(element.AgenciasNombre);
           dataset[0].data.push(element.DatosTipos.length === 0 ? 0 : Number(element.DatosTipos[0].BienesCostoOriginal));
           dataset[1].data.push(element.DatosTipos.length === 0 ? 0 : Number(element.DatosTipos[0].Cantidad));
@@ -127,8 +142,8 @@ export class HomeComponent implements OnInit {
       // Selecciono una agencia y todos los tipos de bienes
       if (this.agenciaId !== 0 && this.tipoBienId === 0) {
 
-        if (grafica[0]) {
-          for (const datostipos of grafica[0].DatosTipos) {
+        if (this.datosGrafica[0]) {
+          for (const datostipos of this.datosGrafica[0].DatosTipos) {
             this.barChartLabels.push(datostipos.TiposBienesNombre);
             dataset[0].data.push(Number(datostipos.BienesCostoOriginal));
             dataset[1].data.push(Number(datostipos.Cantidad));
@@ -143,13 +158,9 @@ export class HomeComponent implements OnInit {
       this.barChartData = dataset;
       this.mostrarGrafica = this.haydatosGrafica();
       this.waiting = false;
-    }).catch(error => {
-      console.error(error);
-      this.waiting = false;
-    });
-
-
+    }
   }
+
   mensaje(msg) {
     Swal.fire({
       title: 'Mensaje',
@@ -201,5 +212,15 @@ export class HomeComponent implements OnInit {
     if (tipo === Select.TIPO_BIEN) {
       this.agenciasAux = this.agencias;
     }
+  }
+  onInputChange(event: MatSliderChange) {
+  }
+  onSelection($event) {
+    this.waiting = true;
+    this.barChartType = $event.value;
+    setTimeout(() => {
+      this.refresh();
+      this.waiting = false;
+    }, 200);
   }
 }

@@ -46,24 +46,33 @@
 
             <mat-form-field>
                 <mat-label>Tipo de Gráfica</mat-label>
-                <mat-select [(ngModel)]='barChartType'>
+                <mat-select (selectionChange)=" onSelection($event)">
                     <mat-option *ngFor="let opt of options" [value]="opt.value">
                         <img [src]="opt.img" alt="Nofoto" width="30">
                         {{opt.name}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-        </div>
 
+
+            <div style="display: inline-block;">
+                <div class="titulo labelSize">Tamaño</div>
+                <mat-slider min="1" max="100" step="1" color="primary" thumbLabel [(ngModel)]="this.size"
+                    (input)="onInputChange($event)"></mat-slider>
+            </div>
+        </div>
     </mat-tab>
 
 </mat-tab-group>
 
-<div style="margin:0 auto;" *ngIf="mostrarGrafica && !waiting">
-    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" height="100" width="300"
-        [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+<div [style.height.px]="700 * (this.size/100)" [style.width.px]="1400 * (this.size/100)"
+    *ngIf="mostrarGrafica && !waiting">
+    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+        [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType" [style.height.%]="100"
+        [style.width.%]="100">
     </canvas>
 </div>
+
 
 <mat-progress-bar mode="indeterminate" *ngIf="waiting"></mat-progress-bar>
 
