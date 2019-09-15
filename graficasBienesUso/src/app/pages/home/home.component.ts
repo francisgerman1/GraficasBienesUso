@@ -54,10 +54,22 @@ export class HomeComponent implements OnInit {
   mostrarGrafica: boolean;
 
   constructor(private agenciasService: AgenciasService, private bienesService: BienesService, private graficasService: GraficasService) {
-    this.llenarAgencias();
-    this.llenarTiposBienes();
-    this.resetGrafica();
-    this.opcionesGrafica();
+    this.llenarAgencias().then(() => {
+      this.llenarTiposBienes().then(() => {
+        this.resetGrafica();
+        this.opcionesGrafica();
+        this.initGrafica();
+      });
+    });
+  }
+  initGrafica() {
+    this.agenciaId = 1; // Agencia central id=1
+    this.tipoBienId = 0; // Todos los bienes id=0
+    const lastYear = new Date().getFullYear() - 1;
+    this.desde = new Date(new Date().setFullYear(lastYear, 0, 1));
+    this.hasta = new Date(new Date().setFullYear(lastYear, 11, 31));
+    this.selectChange({ value: 1 }, Select.AGENCIA);
+    this.buscar();
   }
 
   ngOnInit() {
@@ -158,7 +170,7 @@ export class HomeComponent implements OnInit {
   }
   llenarAgencias() {
     // Obtengo las agencias
-    this.agenciasService.getAgencias().then(agencias => {
+    return this.agenciasService.getAgencias().then(agencias => {
       this.agencias = agencias;
       this.agenciasAux = agencias;
       this.agencias.push({ Id: 0, Nombre: 'Todas', Codigo: '' });
@@ -169,7 +181,7 @@ export class HomeComponent implements OnInit {
   }
   llenarTiposBienes() {
     // Obtengo los tipos de bienes
-    this.bienesService.getTiposBienes().then(tipos => {
+    return this.bienesService.getTiposBienes().then(tipos => {
       this.tiposBienes = tipos;
       this.tiposBienesAux = tipos;
       this.tiposBienes.push({ Id: 0, Nombre: 'Todos', VidaUtil: 0 });
@@ -183,15 +195,11 @@ export class HomeComponent implements OnInit {
       if (event.value === 0) {
         this.tiposBienesAux = this.tiposBienes.filter(t => t.Id !== 0);
       } else {
-        this.tiposBienesAux = this.tiposBienes;
+        this.tiposBienesAux = this.tiposBienes.filter(t => t.Id === 0);
       }
     }
     if (tipo === Select.TIPO_BIEN) {
-      if (event.value === 0) {
-        this.agenciasAux = this.agencias.filter(a => a.Id !== 0);
-      } else {
-        this.agenciasAux = this.agencias;
-      }
+      this.agenciasAux = this.agencias;
     }
   }
 }

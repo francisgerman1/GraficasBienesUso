@@ -59,8 +59,8 @@
 
 </mat-tab-group>
 
-<div style="width: 85%;margin:0 auto;" *ngIf="mostrarGrafica && !waiting">
-    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+<div style="margin:0 auto;" *ngIf="mostrarGrafica && !waiting">
+    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" height="100" width="300"
         [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
     </canvas>
 </div>
