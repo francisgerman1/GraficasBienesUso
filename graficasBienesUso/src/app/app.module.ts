@@ -4,7 +4,7 @@ import { ChartsModule } from 'ng2-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule, MatCardModule, MatProgressBarModule } from '@angular/material';
+import { MatInputModule, MatCardModule, MatProgressBarModule, MatGridListModule } from '@angular/material';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -43,7 +43,8 @@ import { MAT_DATE_LOCALE } from '@angular/material';
     MatSelectModule,
     HttpClientModule,
     MatCardModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatGridListModule
   ],
   exports: [],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-ES' }],
